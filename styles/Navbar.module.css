@@ -71,3 +71,12 @@
 .logo {
   border-radius: 30%;
 }
+/* responsive functionality */
+@media screen and (max-width: 480px) {
+  .item:nth-child(2) {
+    display: none;
+  }
+  .item:nth-child(1) {
+    flex: 3;
+  }
+}

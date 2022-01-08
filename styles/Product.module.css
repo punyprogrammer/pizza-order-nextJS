@@ -98,3 +98,35 @@
   background-color: #1e7e1e;
   font-weight: bold;
 }
+
+/* adding responsiveness */
+@media screen and (max-width: 480px) {
+  .container {
+    height: auto;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .imgContainer {
+    width: 70vw;
+    height: 70vw;
+    margin-top: 26px;
+  }
+  .title {
+    margin: 3px;
+  }
+  .sizes {
+    width: 100%;
+    justify-content: space-around;
+  }
+  .ingredients {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  .ingredient {
+    margin-top: 20px;
+  }
+  .button,
+  .quantity {
+  }
+}
