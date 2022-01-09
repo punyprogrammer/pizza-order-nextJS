@@ -25,6 +25,10 @@
 .desc {
   text-align: center;
   color: #777;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .container:hover .title {
   color: white;

@@ -53,6 +53,20 @@
 .button:hover {
   background-color: thistle;
 }
+.removeButton {
+  border: none;
+  padding: 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  color: rgb(177, 17, 17);
+  background-color: white;
+  border: 1px solid rgb(177, 17, 17);
+  cursor: pointer;
+}
+.removeButton:hover {
+  color: white;
+  background-color: rgb(177, 17, 17);
+}
 @media screen and (max-width: 480px) {
   .container {
     flex-direction: column;
@@ -63,6 +77,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
   }
   .trTitle {
     display: none;

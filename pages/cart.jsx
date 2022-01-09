@@ -1,7 +1,10 @@
 import styles from "../styles/Cart.module.css";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -13,36 +16,42 @@ const Cart = () => {
             <th>Price</th>
             <th>Quantity</th>
             <th>Total</th>
+            <th>Remove</th>
           </tr>
-          <tr className={styles.tr}>
-            <td>
-              <div className={styles.imgContainer}>
-                <Image
-                  src="/images/pizza.png"
-                  layout="fill"
-                  alt=""
-                  objectFit="cover"
-                />
-              </div>
-            </td>
-            <td>
-              <span className={styles.name}>CORALZO</span>
-            </td>
-            <td>
-              <span className={styles.extras}>
-                Double ingredients,spicy sauce
-              </span>
-            </td>
-            <td>
-              <span className={styles.price}>$ 17.90</span>
-            </td>
-            <td>
-              <span className={styles.quantity}>2</span>
-            </td>
-            <td>
-              <span className={styles.total}>$39.90</span>
-            </td>
-          </tr>
+          {cart.products.map((product) => (
+            <tr className={styles.tr} key={product._id}>
+              <td>
+                <div className={styles.imgContainer}>
+                  <Image
+                    src="/images/pizza.png"
+                    layout="fill"
+                    alt=""
+                    objectFit="cover"
+                  />
+                </div>
+              </td>
+              <td>
+                <span className={styles.name}>{product.title}</span>
+              </td>
+              <td>
+                <span className={styles.extras}>
+                  {product.ingredientsList.join(", ")}
+                </span>
+              </td>
+              <td>
+                <span className={styles.price}>$ 17.90</span>
+              </td>
+              <td>
+                <span className={styles.quantity}>2</span>
+              </td>
+              <td>
+                <span className={styles.total}>$39.90</span>
+              </td>
+              <td>
+                <button className={styles.removeButton}>Remove</button>
+              </td>
+            </tr>
+          ))}
         </table>
       </div>
       <div className={styles.right}>

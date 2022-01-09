@@ -1,31 +1,35 @@
 import styles from "../../styles/Product.module.css";
 import Image from "next/image";
 import { useState } from "react";
-const Product = () => {
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../redux/cartSlice";
+const Product = ({ pizza }) => {
   const [size, setSize] = useState(0);
+  const [additiveprice, setAdditivePrice] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
+  const dispatch = useDispatch();
+
   const addIngredients = (item) => {
     if (ingredientsList.indexOf(item) === -1) {
       const newArr = [...ingredientsList, item];
       setIngredientsList(newArr);
+      setAdditivePrice((prev) => prev + Number(item.price));
+      console.log(ingredientsList);
     } else {
-      const newArr = ingredientsList.filter((x) => x !== item);
+      const newArr = ingredientsList.filter((x) => x._id !== item._id);
       setIngredientsList(newArr);
+      setAdditivePrice((prev) => prev - Number(item.price));
+      console.log(ingredientsList);
     }
   };
-  const ingredients = [
-    "Double Ingredients",
-    "Extra Cheese",
-    "Spicy Sauce",
-    "Garlic Sauce",
-  ];
-  const pizza = {
-    id: 1,
-    img: "/images/pizza.png",
-    name: "CAMPAGNOLA",
-    price: [19.9, 23.9, 27.9],
-    desc: "One of the best seasoned pizzas of the ",
+  // add to cartstore
+
+  const addToCart = () => {
+    dispatch(addProduct({ ...pizza, ingredientsList, price:pizza.prices[size] + additiveprice, quantity }));
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -34,8 +38,10 @@ const Product = () => {
         </div>
       </div>
       <div className={styles.right}>
-        <h1 className={styles.title}>{pizza.name}</h1>
-        <span className={styles.price}>${pizza.price[size]}</span>
+        <h1 className={styles.title}>{pizza.title}</h1>
+        <span className={styles.price}>
+          ${pizza.prices[size] + additiveprice}
+        </span>
         <p className={styles.desc}>{pizza.desc}</p>
         <h3 className={styles.choose}>Choose the size</h3>
         <div className={styles.sizes}>
@@ -68,7 +74,7 @@ const Product = () => {
           </div>
         </div>
         <div className={styles.ingredients}>
-          {ingredients.map((item, idx) => {
+          {pizza.extraOptions.map((item) => {
             return (
               <div
                 className={[
@@ -77,10 +83,10 @@ const Product = () => {
                     ? styles.selected
                     : "none",
                 ].join(" ")}
-                key={idx + 101}
+                key={item._id}
                 onClick={() => addIngredients(item)}
               >
-                {item}
+                {item.text}
               </div>
             );
           })}
@@ -88,15 +94,32 @@ const Product = () => {
         <div className={styles.addItems}>
           <input
             type="number"
+            value={quantity}
+            onChange={(e) => {
+              setQuantity(e.target.value);
+              console.log(quantity);
+            }}
             className={styles.quantity}
-            defaultValue={1}
             pattern="[0-9]*"
           />
-          <button className={styles.addButton}>ADD TO CART</button>
+          <button className={styles.addButton} onClick={addToCart}>
+            ADD TO CART
+          </button>
         </div>
       </div>
     </div>
   );
+};
+export const getServerSideProps = async ({ params }) => {
+  const res = await axios.get(
+    `http://localhost:3000/api/products/${params.id}`
+  );
+
+  return {
+    props: {
+      pizza: res.data,
+    },
+  };
 };
 
 export default Product;
