@@ -1,10 +1,17 @@
 import styles from "../styles/Cart.module.css";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-
+import { removeProduct } from "../redux/cartSlice";
 const Cart = () => {
   const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
+  Number.prototype.round = function (places) {
+    return +(Math.round(this + "e+" + places) + "e-" + places);
+  };
+  const removeFromCart = (product, index) => {
+    dispatch(removeProduct({ ...product, index }));
+  };
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -18,7 +25,7 @@ const Cart = () => {
             <th>Total</th>
             <th>Remove</th>
           </tr>
-          {cart.products.map((product) => (
+          {cart.products.map((product, index) => (
             <tr className={styles.tr} key={product._id}>
               <td>
                 <div className={styles.imgContainer}>
@@ -39,16 +46,23 @@ const Cart = () => {
                 </span>
               </td>
               <td>
-                <span className={styles.price}>$ 17.90</span>
+                <span className={styles.price}>${product.price}</span>
               </td>
               <td>
-                <span className={styles.quantity}>2</span>
+                <span className={styles.quantity}>{product.quantity}</span>
               </td>
               <td>
-                <span className={styles.total}>$39.90</span>
+                <span className={styles.total}>
+                  ${(product.quantity * product.price).round(2)}
+                </span>
               </td>
               <td>
-                <button className={styles.removeButton}>Remove</button>
+                <button
+                  className={styles.removeButton}
+                  onClick={() => removeFromCart(product, index)}
+                >
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
@@ -58,13 +72,13 @@ const Cart = () => {
         <div className={styles.wrapper}>
           <h2 className={styles.title}>CART TOTAL</h2>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>SubTotal: </b>$79.60
+            <b className={styles.totalTextTitle}>SubTotal: </b>${cart.total}
           </div>
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Discount: </b>$0.00
           </div>
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total: </b>$79.60
+            <b className={styles.totalTextTitle}>Total: </b>${cart.total}
           </div>
           <button className={styles.button}>CHECKOUT NOW!</button>
         </div>

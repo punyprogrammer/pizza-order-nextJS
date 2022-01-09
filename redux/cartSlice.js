@@ -13,10 +13,11 @@ const cartSlice = createSlice({
       state.quantity += 1;
     },
     removeProduct: (state, action) => {
-      const newProducts = state.products.filter(
-        (item) => item.id !== action.payload.id
-      );
-      state.products = newProducts;
+      state.total -= Number(action.payload.price) * action.payload.quantity;
+      state.quantity -= 1;
+      state.products = state.products
+        .slice(0, action.payload.index)
+        .concat(state.products.slice(action.payload.index + 1));
     },
     reset: (state) => {
       state = initialState;
